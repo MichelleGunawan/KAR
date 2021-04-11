@@ -1,24 +1,51 @@
 import React from "react";
-import {View, Text} from "react-native";
+import {View, Text, Image, FlatList} from "react-native";
 
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 
+import cars from '../../assets/data/cars';
 
 const HomeMap =(props) =>{
+
+    const getImage = (type) => {
+        if(type==='Kar')
+        {
+            return require('../../assets/images/kar.png')
+        }
+        if(type==='KarS')
+        {
+            return require('../../assets/images/karS.png')
+        }
+        if(type=="KarX")
+        {
+            return require('../../assets/images/karX.png')
+        }
+    }
+
     return(
-        <View style={{heigh: 300, backgroundColor: "#aaa", justifyContent: 'center', alignItems: 'center', height:300}}>
+        <MapView
+        style={{width: '100%', height: '100%'}}
+        provider={ PROVIDER_GOOGLE }
+        initialRegion={{
+        latitude: 28.450627,
+        longitude: -16.263045,
+        latitudeDelta: 0.0222,
+        longitudeDelta: 0.0121,
+        }}>
             
-            <MapView
-                style={{width: '100%', height: '100%'}}
-                provider={ PROVIDER_GOOGLE }
-                initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-                }}
-            />
-        </View>
+         {cars.map((car)=>(
+             <Marker key={car.id} coordinate={{ latitude : car.latitude,  longitude : car.longitude, }}>
+
+             <Image 
+             style={{width:50, height: 50, resizeMode: 'contain'}} 
+             source={getImage(car.type)}
+             />
+ 
+             </Marker>
+         ))}          
+                
+        </MapView>
+        
     )
 }
 
