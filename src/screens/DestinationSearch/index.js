@@ -2,7 +2,8 @@ import React, {useEffect, useState} from "react";
 import {View, Text, TextInput, SafeAreaView} from "react-native";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-import styles from './styles.js'
+import styles from './styles.js';
+import PlaceRow from'./PlaceRow';
 
 const DestinationScreen =(props) =>{
     const[originPlace, setOriginPlace] = useState(null);
@@ -21,7 +22,13 @@ const DestinationScreen =(props) =>{
 
             <GooglePlacesAutocomplete
             placeholder="Where From?"
-            styles={{textInput: styles.textInput}} 
+            suppressDefaultStyles
+            styles={{
+                textInput: styles.textInput,
+                container:styles.autocompleteContainer,
+                listView:styles.listView
+                
+            }} 
             
             onPress={(data, details = null) => {
                 setOriginPlace({data,details});
@@ -32,12 +39,20 @@ const DestinationScreen =(props) =>{
                 key: 'AIzaSyBkqeiDhW2DiRb_tZfrueJnyJFc2LecSgY',
                 language: 'en',
             }}
+            enablePoweredByContainer={false}
+            renderRow={(data) => <PlaceRow data={data}/>}
             />
 
             <GooglePlacesAutocomplete
             placeholder="Where To?"
-            styles={{textInput: styles.textInput}} 
-            
+            suppressDefaultStyles
+            styles={{
+                textInput: styles.textInput,
+                container:{
+                    ...styles.autocompleteContainer,
+                    top:65,
+                },
+            }}             
             onPress={(data, details = null) => {
                 setDestinationPlace({data,details});
                 //console.log(data, details);
@@ -47,7 +62,17 @@ const DestinationScreen =(props) =>{
                 key: 'AIzaSyBkqeiDhW2DiRb_tZfrueJnyJFc2LecSgY',
                 language: 'en',
             }}
+            enablePoweredByContainer={false}
+            renderRow={(data) => <PlaceRow data={data}/>}
             />
+
+            {/* cicle */}
+            <View style={styles.circle}/>
+            {/* line */}
+            <View style={styles.line}/>
+            {/* square */}
+            <View style={styles.square}/>
+
             </View>
         </SafeAreaView>        
     )

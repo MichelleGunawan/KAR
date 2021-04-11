@@ -10,15 +10,15 @@ const HomeMap =(props) =>{
     const getImage = (type) => {
         if(type==='Kar')
         {
-            return require('../../assets/images/kar.png')
+            return require('../../assets/images/top-kar.png')
         }
         if(type==='KarS')
         {
-            return require('../../assets/images/karS.png')
+            return require('../../assets/images/top-karS.png')
         }
         if(type=="KarX")
         {
-            return require('../../assets/images/karX.png')
+            return require('../../assets/images/top-karX.png')
         }
     }
 
@@ -37,7 +37,13 @@ const HomeMap =(props) =>{
              <Marker key={car.id} coordinate={{ latitude : car.latitude,  longitude : car.longitude, }}>
 
              <Image 
-             style={{width:50, height: 50, resizeMode: 'contain'}} 
+             style={
+                {width:50, height: 50, 
+                resizeMode: 'contain',
+                transform:[{
+                    rotate:`${car.heading}deg`
+                }]
+                }} 
              source={getImage(car.type)}
              />
  
