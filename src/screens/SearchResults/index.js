@@ -6,7 +6,13 @@ import TransportTypes from '../../components/TransportTypes';
 import HomeSearch from '../../components/HomeSearch'
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 
+import {useRoute} from '@react-navigation/native'
+
 const SearchResults =(props) =>{
+    const route = useRoute();
+
+    console.log(route.params);
+
     return(
         <View style={{display:'flex', justifyContent: 'space-between'}}>
             

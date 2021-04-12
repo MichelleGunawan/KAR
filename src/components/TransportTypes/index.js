@@ -13,7 +13,7 @@ const TransportTypes =(props) =>{
 
     return(
         <View>
-            {types.map(type => <TransportTypeRow type={type}/>)}
+            {types.map(type => <TransportTypeRow type={type} key={type.id}/>)}
             
             <Pressable 
             onPress={confirm} 
