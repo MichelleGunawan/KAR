@@ -8,7 +8,7 @@ import types from '../../assets/data/types';
 
 const TransportTypes =(props) =>{
     const confirm = () => {
-        console.ward('confirm');
+        console.warn('confirm');
     };
 
     return(

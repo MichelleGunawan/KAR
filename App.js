@@ -36,8 +36,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import HomeScreen from './src/screens/HomeScreen';
 import DestinationSearch from './src/screens/DestinationSearch';
 import SearchResults from './src/screens/SearchResults';
-import Router from './src/navigation/Root.js'
+import Router from './src/navigation/Root'
 
+import HomeNavigator from './src/navigation/HomeNavigator'
 
 navigator.geolocation = require('@react-native-community/geolocation');
 
@@ -84,7 +85,7 @@ const App: () => Node = () => {
   return (
     <>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <Router/>
+      <HomeNavigator/>
     </>
     // <SafeAreaView style={backgroundStyle}>
     

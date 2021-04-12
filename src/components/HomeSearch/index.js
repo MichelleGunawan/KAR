@@ -13,7 +13,6 @@ const HomeSearch =(props) =>{
     const navigation=useNavigation();
 
     const goToSearch = () =>{
-        console.warn("search");
         navigation.navigate("DestinationSearch")
     }
 
