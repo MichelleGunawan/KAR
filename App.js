@@ -58,7 +58,7 @@ const App: () => Node = () => {
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can use the camera");
+        console.log("You can now OTO!");
       } else {
         console.log("Camera permission denied");
       }
@@ -85,7 +85,7 @@ const App: () => Node = () => {
   return (
     <>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <HomeNavigator/>
+      <Router/>
     </>
     // <SafeAreaView style={backgroundStyle}>
     

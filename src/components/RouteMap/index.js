@@ -8,21 +8,33 @@ const GOOGLE_MAPS_APIKEY = 'AIzaSyBkqeiDhW2DiRb_tZfrueJnyJFc2LecSgY'
 
 const RouteMap =({origin, destination}) =>{
 
-    console.log("origin: "+ origin);
-    console.log("destination "+ destination);
+    console.log("origin")
+    console.log(origin);
+    console.log("destination")
+    console.log(destination);
 
-    const originLoc={
-        latitude: 28.450627,
-        longitude: -16.263045,
-        // latitude: origin.type.geometry.location.lat,
-        // longitude: origin.type.geometry.location.lng,
+    console.log("origin lat")
+    console.log(origin.details.geometry.location.lat)
+    console.log("origin lng")
+    console.log(origin.details.geometry.location.lng)
+    
+    const originLoc=
+    {
+        // latitude: 28.450627,
+        // longitude: -16.263045,
+        // latitude: 33.4936391,
+        // longitude: -117.1483648,
+        latitude: origin.details.geometry.location.lat,
+        longitude: origin.details.geometry.location.lng,
     }
 
     const destinationLoc={
-        latitude: 28.450827,
-        longitude: -16.263945,
-        // latitude: destination.details.geometry.location.lat,
-        // longitude: destination.details.geometry.location.lng,
+        // latitude: 28.450827,
+        // longitude: -16.263945,
+        // latitude: 33.5539143,
+        // longitude: -117.2139232,
+        latitude: destination.lat,
+        longitude: destination.lng,
     }
 
     return(
@@ -31,8 +43,8 @@ const RouteMap =({origin, destination}) =>{
         provider={ PROVIDER_GOOGLE }
         showsUserLocation={true}
         initialRegion={{
-        latitude: 28.450627,
-        longitude: -16.263045,
+            latitude: originLoc.latitude,
+            longitude: originLoc.longitude,
         latitudeDelta: 0.0222,
         longitudeDelta: 0.0121,
         }}>     
@@ -46,10 +58,12 @@ const RouteMap =({origin, destination}) =>{
             <Marker
             coordinate={originLoc}
             title={'Origin'}
+            pinColor={"tan"}
             />
             <Marker
             coordinate={destinationLoc}
             title={"Destination"}
+            pinColor={"tan"}
             />
         </MapView>
         
