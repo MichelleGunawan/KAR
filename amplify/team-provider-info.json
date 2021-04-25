@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-kar-dev-200350-authRole",
+      "UnauthRoleArn": "arn:aws:iam::345576119470:role/amplify-kar-dev-200350-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::345576119470:role/amplify-kar-dev-200350-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-kar-dev-200350-deployment",
+      "UnauthRoleName": "amplify-kar-dev-200350-unauthRole",
+      "StackName": "amplify-kar-dev-200350",
+      "StackId": "arn:aws:cloudformation:us-west-2:345576119470:stack/amplify-kar-dev-200350/dea0d870-a572-11eb-a12a-0a5cdf7918b7",
+      "AmplifyAppId": "d1es1tdti1k99r"
+    },
+    "categories": {
+      "auth": {
+        "kar": {}
+      },
+      "function": {
+        "karPostConfirmation": {
+          "deploymentBucketName": "amplify-kar-dev-200350-deployment",
+          "s3Key": "amplify-builds/karPostConfirmation-3667667335724d537246-build.zip"
+        }
+      }
+    }
+  }
+}

@@ -37,8 +37,13 @@ import HomeScreen from './src/screens/HomeScreen';
 import DestinationSearch from './src/screens/DestinationSearch';
 import SearchResults from './src/screens/SearchResults';
 import Router from './src/navigation/Root'
-
 import HomeNavigator from './src/navigation/HomeNavigator'
+
+import Amplify from 'aws-amplify';
+import config from './src/aws-exports';
+Amplify.configure(config);
+
+import { withAuthenticator } from 'aws-amplify-react-native';
 
 navigator.geolocation = require('@react-native-community/geolocation');
 
@@ -93,4 +98,5 @@ const App: () => Node = () => {
   );
 };
 
-export default App;
+// export default App;
+export default withAuthenticator(App);
