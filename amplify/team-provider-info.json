@@ -18,7 +18,7 @@
       "function": {
         "karPostConfirmation": {
           "deploymentBucketName": "amplify-kar-dev-200350-deployment",
-          "s3Key": "amplify-builds/karPostConfirmation-3667667335724d537246-build.zip"
+          "s3Key": "amplify-builds/karPostConfirmation-627638733549374d304c-build.zip"
         }
       }
     }

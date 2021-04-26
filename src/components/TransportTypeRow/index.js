@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Image, Text} from "react-native";
+import {View, Image, Text, Pressable} from "react-native";
 
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,7 +8,7 @@ import styles from './styles';
 
 const TransportTypeRow =(props) =>{
     console.log(props);
-    const{type} = props;
+    const{type, onPress, isSelected} = props;
 
     const getImage = () => {
         if(type.type==='Kar')
@@ -26,7 +26,10 @@ const TransportTypeRow =(props) =>{
     }
 
     return(
-        <View style={styles.container}>
+        <Pressable 
+        onPress={onPress} 
+        style={[styles.container, {backgroundColor: isSelected?'#efefef':'#fff'}]}
+        >
             <Image 
             style={styles.image} 
             source={getImage()}
@@ -47,7 +50,7 @@ const TransportTypeRow =(props) =>{
                 <Ionicons name={'pricetag'} size={18} color={'#99d962'}/>
                 <Text style={styles.price}>est. ${type.price}</Text>
             </View>
-        </View>
+        </Pressable>
     )
 }
 

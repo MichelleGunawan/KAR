@@ -6,17 +6,23 @@ import TransportTypeRow from '../TransportTypeRow'
 
 import types from '../../assets/data/types';
 
-const TransportTypes =(props) =>{
-    const confirm = () => {
-        console.warn('confirm');
-    };
+const TransportTypes =({typeState, onSubmit}) =>{
+
+    const[selectedType, setSelectedType] = typeState;
 
     return(
         <View>
-            {types.map(type => <TransportTypeRow type={type} key={type.id}/>)}
+            {types.map(type => 
+            <TransportTypeRow 
+            type={type} 
+            key={type.id} 
+            isSelected={type.type===selectedType}
+            onPress={() => setSelectedType(type.type)}
+            />
+            )}
             
             <Pressable 
-            onPress={confirm} 
+            onPress={onSubmit} 
             style={{backgroundColor:'#9cbe85', padding: 10, margin: 10, alignItems:'center'}}>
                 <Text style={{color:"white", fontWeight: 'bold'}}>
                     Confirm Uber
