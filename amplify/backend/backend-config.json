@@ -1,12 +1,19 @@
 {
+  "function": {
+    "karAuthPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "auth": {
-    "kar": {
+    "karAuth": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "karPostConfirmation",
+          "resourceName": "karAuthPostConfirmation",
           "triggerProvider": "Cognito",
           "attributes": [
             "Arn",
@@ -17,15 +24,8 @@
       "customAuth": false
     }
   },
-  "function": {
-    "karPostConfirmation": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    }
-  },
   "api": {
-    "kar": {
+    "karApi": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -33,7 +33,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authkar"
+              "userPoolId": "authkarAuth"
             }
           },
           "additionalAuthenticationProviders": []

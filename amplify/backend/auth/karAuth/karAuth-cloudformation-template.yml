@@ -11,13 +11,13 @@ Parameters:
   
   
   
-  functionkarPostConfirmationArn:
+  functionkarAuthPostConfirmationArn:
     Type: String
-    Default: functionkarPostConfirmationArn
+    Default: functionkarAuthPostConfirmationArn
   
-  functionkarPostConfirmationName:
+  functionkarAuthPostConfirmationName:
     Type: String
-    Default: functionkarPostConfirmationName
+    Default: functionkarAuthPostConfirmationName
   
   
   
@@ -129,10 +129,6 @@ Parameters:
   thirdPartyAuth:
     Type: String
             
-        
-  usernameAttributes:
-    Type: CommaDelimitedList
-      
   
   userPoolGroups:
     Type: String
@@ -153,6 +149,7 @@ Parameters:
   userPoolGroupList:
     Type: CommaDelimitedList
       
+            
   serviceName:
     Type: String
   
@@ -173,11 +170,6 @@ Parameters:
   dependsOn:
     Type: CommaDelimitedList
       
-        
-  authProviders:
-    Type: CommaDelimitedList
-      
-            
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
   
@@ -192,7 +184,7 @@ Resources:
   # Created to allow the UserPool SMS Config to publish via the Simple Notification Service during MFA Process
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, 'kar4bc696bc_sns-role', !Join ['',[ 'sns', '4bc696bc', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, 'kar666aacc3_sns-role', !Join ['',[ 'sns', '666aacc3', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -204,10 +196,10 @@ Resources:
               - "sts:AssumeRole"
             Condition:
               StringEquals:
-                sts:ExternalId: kar4bc696bc_role_external_id
+                sts:ExternalId: kar666aacc3_role_external_id
       Policies:
         -
-          PolicyName: kar4bc696bc-sns-policy
+          PolicyName: kar666aacc3-sns-policy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -244,7 +236,7 @@ Resources:
         
         
         
-          PostConfirmation: !Ref functionkarPostConfirmationArn
+          PostConfirmation: !Ref functionkarAuthPostConfirmationArn
         
         
         
@@ -266,14 +258,12 @@ Resources:
           RequireSymbols: false
           RequireUppercase: false
       
-      UsernameAttributes: !Ref usernameAttributes
-      
       MfaConfiguration: !Ref mfaConfiguration
       SmsVerificationMessage: !Ref smsVerificationMessage
       SmsAuthenticationMessage: !Ref smsAuthenticationMessage
       SmsConfiguration:
         SnsCallerArn: !GetAtt SNSRole.Arn
-        ExternalId: kar4bc696bc_role_external_id
+        ExternalId: kar666aacc3_role_external_id
     
   
   
@@ -287,7 +277,7 @@ Resources:
     Properties:
       Action: "lambda:invokeFunction"
       Principal: "cognito-idp.amazonaws.com"
-      FunctionName: !Ref functionkarPostConfirmationName
+      FunctionName: !Ref functionkarAuthPostConfirmationName
       SourceArn: !GetAtt UserPool.Arn
   
   
@@ -302,7 +292,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: kar4bc696bc_app_clientWeb
+      ClientName: kar666aacc3_app_clientWeb
       
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
@@ -312,7 +302,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: kar4bc696bc_app_client
+      ClientName: kar666aacc3_app_client
       
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
@@ -323,7 +313,7 @@ Resources:
   # Created to execute Lambda which gets userpool app client config values
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',['upClientLambdaRole', '4bc696bc', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',['upClientLambdaRole', '666aacc3', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -377,7 +367,7 @@ Resources:
   # Marked as depending on UserPoolClientRole for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: kar4bc696bc_userpoolclient_lambda_iam_policy
+      PolicyName: kar666aacc3_userpoolclient_lambda_iam_policy
       Roles:
         - !Ref UserPoolClientRole
       PolicyDocument:
@@ -394,7 +384,7 @@ Resources:
   # Marked as depending on UserPoolClientLambdaPolicy for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: kar4bc696bc_userpoolclient_lambda_log_policy
+      PolicyName: kar666aacc3_userpoolclient_lambda_log_policy
       Roles:
         - !Ref UserPoolClientRole
       PolicyDocument:
@@ -434,7 +424,7 @@ Resources:
   # Always created
     Type: AWS::Cognito::IdentityPool
     Properties:
-      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'kar4bc696bc_identitypool_4bc696bc', !Join ['',['kar4bc696bc_identitypool_4bc696bc', '__', !Ref env]]]
+      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'kar666aacc3_identitypool_666aacc3', !Join ['',['kar666aacc3_identitypool_666aacc3', '__', !Ref env]]]
       
       CognitoIdentityProviders:
         - ClientId:  !Ref UserPoolClient

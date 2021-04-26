@@ -23,7 +23,7 @@ type Order @model
   @key(name: "byUser", fields: ["userId"])
   @key(name: "byCar", fields: ["carId", "createdAt"]) {
   id: ID!
-  createdAt: ID!
+  createdAt: String!
 
   type: String!
   status: String,

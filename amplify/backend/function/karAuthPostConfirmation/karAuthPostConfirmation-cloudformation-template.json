@@ -67,12 +67,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "karPostConfirmation",
+            "karAuthPostConfirmation",
             {
               "Fn::Join": [
                 "",
                 [
-                  "karPostConfirmation",
+                  "karAuthPostConfirmation",
                   "-",
                   {
                     "Ref": "env"
@@ -122,12 +122,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "karPostConfirmation",
+            "karAuthPostConfirmation",
             {
               "Fn::Join": [
                 "",
                 [
-                  "karPostConfirmation",
+                  "karAuthPostConfirmation",
                   "-",
                   {
                     "Ref": "env"

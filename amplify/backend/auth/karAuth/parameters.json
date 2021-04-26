@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "kar4bc696bc_identitypool_4bc696bc",
+    "identityPoolName": "kar666aacc3_identitypool_666aacc3",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "kar4bc696bc",
-    "userPoolName": "kar4bc696bc_userpool_4bc696bc",
+    "resourceNameTruncated": "kar666aacc3",
+    "userPoolName": "kar666aacc3_userpool_666aacc3",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "kar4bc696bc_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "karAut666aacc3_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "4bc696bc",
-    "resourceName": "kar",
+    "sharedId": "666aacc3",
+    "resourceName": "karAuth",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -47,9 +47,6 @@
     },
     "useDefault": "manual",
     "thirdPartyAuth": false,
-    "usernameAttributes": [
-        "email"
-    ],
     "userPoolGroups": false,
     "adminQueries": false,
     "triggers": "{\n  \"PostConfirmation\": [\n    \"custom\"\n  ]\n}",
@@ -64,13 +61,12 @@
     "dependsOn": [
         {
             "category": "function",
-            "resourceName": "karPostConfirmation",
+            "resourceName": "karAuthPostConfirmation",
             "triggerProvider": "Cognito",
             "attributes": [
                 "Arn",
                 "Name"
             ]
         }
-    ],
-    "authProviders": []
+    ]
 }
