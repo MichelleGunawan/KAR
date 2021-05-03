@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -16,6 +16,7 @@ import {
   Text,
   useColorScheme,
   View,
+  PermissionsAndroid
 } from 'react-native';
 
 import {
@@ -29,33 +30,42 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 import HomeScreen from './src/screens/HomeScreen';
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+navigator.geolocation = require('@react-native-community/geolocation');
 
 const App: () => Node = () => {
+  const androidPermissions = async() => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "KÄR App Location Permission",
+          message:
+            "KÄR App needs access to your location " +
+            "so you can take awesome rides.",
+          // buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("You can now KÄR!");
+      } else {
+        console.log("Location permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  useEffect(() =>{
+    if(Platform.OS=='android'){
+      androidPermissions();
+    }
+    else{
+      Geolocation.requestAuthorization()
+    }
+  },  [])
+
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
