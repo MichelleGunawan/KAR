@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
     },
     userBg:{
-        backgroundColor: "#9bce85",
+        backgroundColor: "#9bce55",
         width: 60,
         height: 60,
         alignItems: 'center',

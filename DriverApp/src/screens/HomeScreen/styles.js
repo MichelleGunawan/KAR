@@ -2,17 +2,16 @@ import {Dimensions, StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
     bottomContainer:{
-        height: 75,
+        height: 90,
         backgroundColor: 'white',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'center'
     },
 
     bottomText:{
         fontSize: 22,
         color: '#a4a4a4',
-        
     },
     roundButton:{
         position:'absolute',
@@ -23,13 +22,13 @@ const styles = StyleSheet.create({
     },
     goButton:{
         position:'absolute',
-        backgroundColor:'#9cbe85',
-        height: 75,
-        width:75,
+        backgroundColor:'#9cbe55',
+        height: 80,
+        width:80,
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
-        bottom: 100,
+        bottom: 95,
         left: Dimensions.get('window').width /2 - 37,
 
     },

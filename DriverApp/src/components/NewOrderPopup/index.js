@@ -10,15 +10,7 @@ import AntDesign from "react-native-vector-icons/AntDesign"
 
 import styles from "./styles";
 
-const NewOrderPopup= (props) => {
-
-    const onDecline=() => {
-        console.warn("decline order");
-    }
-    const onAccept=() => {
-        console.warn("accept order");
-    }
-
+const NewOrderPopup= ({newOrder, onAccept, onDecline, duration, distance}) => {
     return(
         <View style={styles.root}>
             <Pressable onPress={onDecline} style={styles.declineButton}>
@@ -28,7 +20,7 @@ const NewOrderPopup= (props) => {
             <Pressable onPress={onAccept} style={styles.popupContainer}>
 
                 <View style={styles.row}>
-                    <Text style={styles.transportType}>KarX</Text>
+                    <Text style={styles.transportType}>{newOrder.type}</Text>
                     
                     <View style={styles.userBg}>
                         <FontAwesome5 name={"user-alt"} color={"white"} size={35}/>
@@ -36,12 +28,13 @@ const NewOrderPopup= (props) => {
 
                     <Text style={styles.transportType}>
                         <AntDesign name={"star"} size={20}/>
-                        5
+                        {' '}
+                        {newOrder.user.rating}
                     </Text>
                 </View>
 
-                <Text style={styles.minutes}>2 min</Text>
-                <Text style={styles.distance}> 0.2 mi</Text>
+                <Text style={styles.minutes}>{duration} min</Text>
+                <Text style={styles.distance}> {distance} mi</Text>
             </Pressable>
             
         </View>
