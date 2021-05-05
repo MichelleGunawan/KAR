@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {View, Text, Dimensions, Pressable} from "react-native";
 import MapView, {PROVIDER_GOOGLE, Marker} from "react-native-maps";
 import MapViewDirections from 'react-native-maps-directions';
@@ -12,8 +12,12 @@ const origin = {latitude: 28.453327, longitude: -16.263045};
 const destination = {latitude: 28.452927, longitude: -16.260845};
 GOOGLE_MAPS_APIKEY = 'AIzaSyBkqeiDhW2DiRb_tZfrueJnyJFc2LecSgY';
 
+import {Auth, API, graphqlOperation} from 'aws-amplify';
+import {getCar, listOrders} from '../../graphql/queries';
+import {updateCar} from '../../graphql/mutations';
+
 const HomeScreen = (props) => {
-    const [isOnline, setIsOnline] = useState(false);
+    const [car, setCar] = useState(null);
     const [myPosition, setMyPosition] = useState(null);
     const [order, setOrder] = useState(null);
     const [newOrder, setNewOrder] = useState({
@@ -32,6 +36,37 @@ const HomeScreen = (props) => {
         }
       })
 
+      const fetchCar = async () => {
+        try {
+          const userData = await Auth.currentAuthenticatedUser();
+          const carData = await API.graphql(
+            graphqlOperation(getCar, { id: userData.attributes.sub }),
+          );
+          setCar(carData.data.getCar);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    
+      const fetchOrders = async () => {
+        try {
+            const ordersData = await API.graphql(
+              graphqlOperation(
+                listOrders,
+                { filter: { status: { eq: 'NEW'}}}
+                )
+            );
+            setNewOrders(ordersData.data.listOrders.items);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    
+      useEffect(() => {
+        fetchCar();
+        fetchOrders();
+      }, []);
+
     const onDecline = () => {
     setNewOrder(null);
     }
@@ -41,9 +76,28 @@ const HomeScreen = (props) => {
         setNewOrder(null);
       }
 
-    const onGoPress =() => {
-        setIsOnline(!isOnline);
-    }
+    // const onGoPress =() => {
+    //     setIsOnline(!isOnline);
+    // }
+
+    const onGoPress = async () => {
+        // Update the car and set it to active
+        try {
+          const userData = await Auth.currentAuthenticatedUser();
+          const input = {
+            id: userData.attributes.sub,
+            isActive: !car.isActive,
+          }
+          const updatedCarData = await API.graphql(
+            graphqlOperation(updateCar, { input })
+          )
+
+          console.log(updatedCarData);
+          setCar(updatedCarData.data.updateCar);
+        } catch (e) {
+          console.error(e);
+        }
+      }
 
     const onUserLocationChange = (event) => {
         setMyPosition(event.nativeEvent.coordinate);
@@ -123,7 +177,7 @@ const HomeScreen = (props) => {
             </View>
           )
         }
-        if (isOnline) {
+        if (car?.isActive) {
           return (
             <Text style={styles.bottomText}>You're online</Text>
           )
@@ -196,7 +250,7 @@ const HomeScreen = (props) => {
 
         <Pressable onPress={onGoPress} style={styles.goButton}>
             <Text style={styles.goText}>
-                {isOnline ?'END':'GO'}
+                {car?.isActive ?'END':'GO'}
             </Text>
         </Pressable>
 
