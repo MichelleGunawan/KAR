@@ -17,104 +17,114 @@ import {getCar, listOrders} from '../../graphql/queries';
 import {updateCar} from '../../graphql/mutations';
 
 const HomeScreen = (props) => {
-    const [car, setCar] = useState(null);
-    const [myPosition, setMyPosition] = useState(null);
-    const [order, setOrder] = useState(null);
-    const [newOrder, setNewOrder] = useState({
-        id: '1',
-        type: 'KarX',
-    
-        originLatitude: 28.453327,
-        originLongitude: -16.263045,
-    
-        destLatitude: 28.452927,
-        destLongitude: -16.260845,
-    
-        user: {
-          rating: 4.8,
-          name: 'Ciara',
-        }
-      })
+const [car, setCar] = useState(null);
+  const [myPosition, setMyPosition] = useState(null);
+  const [order, setOrder] = useState(null)
+  const [newOrders, setNewOrders] = useState([]);
 
-      const fetchCar = async () => {
-        try {
-          const userData = await Auth.currentAuthenticatedUser();
-          const carData = await API.graphql(
-            graphqlOperation(getCar, { id: userData.attributes.sub }),
-          );
-          setCar(carData.data.getCar);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    
-      const fetchOrders = async () => {
-        try {
-            const ordersData = await API.graphql(
-              graphqlOperation(
-                listOrders,
-                { filter: { status: { eq: 'NEW'}}}
-                )
-            );
-            setNewOrders(ordersData.data.listOrders.items);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    
-      useEffect(() => {
-        fetchCar();
-        fetchOrders();
-      }, []);
+  const fetchCar = async () => {
+    try {
+      const userData = await Auth.currentAuthenticatedUser();
+      const carData = await API.graphql(
+        graphqlOperation(getCar, { id: userData.attributes.sub }),
+      );
+      setCar(carData.data.getCar);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
-    const onDecline = () => {
-    setNewOrder(null);
+  const fetchOrders = async () => {
+    try {
+        const ordersData = await API.graphql(
+          graphqlOperation(
+            listOrders,
+            //{ filter: { status: { eq: 'NEW'}}}
+            )
+        );
+        console.log(ordersData);
+        setNewOrders(ordersData.data.listOrders.items);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    fetchCar();
+    fetchOrders();
+  }, []);
+
+  const onDecline = () => {
+    setNewOrders(newOrders.slice(1));
+  }
+
+  const onAccept = async (newOrder) => {
+    try {
+      const input = {
+        id: newOrder.id,
+        status: "PICKING_UP_CLIENT",
+        carId: car.id
+      }
+      const orderData = await API.graphql(
+        graphqlOperation(updateOrder, { input })
+      )
+      setOrder(orderData.data.updateOrder);
+    } catch (e) {
+
     }
 
-    const onAccept = (newOrder) => {
-        setOrder(newOrder);
-        setNewOrder(null);
+    setNewOrders(newOrders.slice(1));
+  }
+
+  const onGoPress = async () => {
+    // Update the car and set it to active
+    try {
+      const userData = await Auth.currentAuthenticatedUser();
+      const input = {
+        id: userData.attributes.sub,
+        isActive: !car.isActive,
       }
+      const updatedCarData = await API.graphql(
+        graphqlOperation(updateCar, { input })
+      )
+      setCar(updatedCarData.data.updateCar);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
-    // const onGoPress =() => {
-    //     setIsOnline(!isOnline);
-    // }
-
-    const onGoPress = async () => {
-        // Update the car and set it to active
-        try {
-          const userData = await Auth.currentAuthenticatedUser();
-          const input = {
-            id: userData.attributes.sub,
-            isActive: !car.isActive,
-          }
-          const updatedCarData = await API.graphql(
-            graphqlOperation(updateCar, { input })
-          )
-
-          console.log(updatedCarData);
-          setCar(updatedCarData.data.updateCar);
-        } catch (e) {
-          console.error(e);
-        }
+  const onUserLocationChange = async (event) => {
+    const { latitude, longitude, heading } = event.nativeEvent.coordinate
+    // Update the car and set it to active
+    try {
+      const userData = await Auth.currentAuthenticatedUser();
+      const input = {
+        id: userData.attributes.sub,
+        latitude,
+        longitude,
+        heading,
       }
+      const updatedCarData = await API.graphql(
+        graphqlOperation(updateCar, { input })
+      )
+      setCar(updatedCarData.data.updateCar);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
-    const onUserLocationChange = (event) => {
-        setMyPosition(event.nativeEvent.coordinate);
-      }
-
-    const onDirectionFound = (event) => {
+  const onDirectionFound = (event) => {
     console.log("Direction found: ", event);
     if (order) {
-        setOrder({
+      setOrder({
         ...order,
         distance: event.distance,
         duration: event.duration,
         pickedUp: order.pickedUp || event.distance < 0.2,
         isFinished: order.pickedUp && event.distance < 0.2,
-        })
+      })
     }
-    }
+  }
 
     const getOrigin = () => {
         return {
@@ -143,7 +153,7 @@ const HomeScreen = (props) => {
               <View style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'center', backgroundColor: '#9cbe55', width: 200, padding: 10, borderRadius: 5}}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>COMPLETE {order.type}</Text>
               </View>
-              <Text style={styles.bottomText}>{order.user.name}</Text>
+              <Text style={styles.bottomText}>{order.user.username}</Text>
             </View>
           )
         }
@@ -158,7 +168,7 @@ const HomeScreen = (props) => {
                 </View>
                 <Text>{order.distance ? order.distance.toFixed(1) : '?'} km</Text>
               </View>
-              <Text style={styles.bottomText}>Dropping off {order.user.name}</Text>
+              <Text style={styles.bottomText}>Dropping off {order.user.username}</Text>
             </View>
           )
         }
@@ -173,7 +183,7 @@ const HomeScreen = (props) => {
                 </View>
                 <Text>{order.distance ? order.distance.toFixed(1) : '?'} km</Text>
               </View>
-              <Text style={styles.bottomText}>Picking up {order.user.name}</Text>
+              <Text style={styles.bottomText}>Picking up {order.user.username}</Text>
             </View>
           )
         }
@@ -263,13 +273,13 @@ const HomeScreen = (props) => {
             <Entypo name={"menu"} size={24} color="#a4a4a4" style={{right:20}}/>
         </View>
 
-        {newOrder && <NewOrderPopup 
-        newOrder={newOrder}
+        {newOrders.length > 0 && !order && <NewOrderPopup
+        newOrder={newOrders[0]}
         duration={2}
         distance={0.5}
         onDecline={onDecline}
-        onAccept={()=>onAccept(newOrder)}
-        />}
+        onAccept={() => onAccept(newOrders[0])}
+      />}
         </View>
     )
 }

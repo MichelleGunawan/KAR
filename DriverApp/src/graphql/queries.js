@@ -42,7 +42,7 @@ export const listOrders = /* GraphQL */ `
         type
         status
         originLatitude
-        oreiginLongitude
+        originLongitude
         destLatitude
         destLongitude
         userId

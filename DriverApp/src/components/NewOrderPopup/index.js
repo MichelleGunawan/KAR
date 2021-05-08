@@ -29,7 +29,7 @@ const NewOrderPopup= ({newOrder, onAccept, onDecline, duration, distance}) => {
                     <Text style={styles.transportType}>
                         <AntDesign name={"star"} size={20}/>
                         {' '}
-                        {newOrder.user.rating}
+                        {newOrder.user?.rating}
                     </Text>
                 </View>
 
