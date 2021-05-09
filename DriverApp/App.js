@@ -104,7 +104,7 @@ const App: () => Node = () => {
       // If not, create a new car for the user
       const newCar = {
         id: authenticatedUser.attributes.sub,
-        type: 'UberX',
+        type: 'Kar',
         userId: authenticatedUser.attributes.sub,
       }
       await API.graphql(graphqlOperation(
@@ -117,6 +117,7 @@ const App: () => Node = () => {
 
   const isDarkMode = useColorScheme() === 'dark';
 
+  //Auth.signOut();
   return (
     <>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />

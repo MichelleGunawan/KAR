@@ -17,7 +17,7 @@ import {getCar, listOrders} from '../../graphql/queries';
 import {updateCar} from '../../graphql/mutations';
 
 const HomeScreen = (props) => {
-const [car, setCar] = useState(null);
+  const [car, setCar] = useState(null);
   const [myPosition, setMyPosition] = useState(null);
   const [order, setOrder] = useState(null)
   const [newOrders, setNewOrders] = useState([]);
@@ -42,8 +42,11 @@ const [car, setCar] = useState(null);
             //{ filter: { status: { eq: 'NEW'}}}
             )
         );
+        console.log("ordersData")
         console.log(ordersData);
         setNewOrders(ordersData.data.listOrders.items);
+        console.log("new orders");
+        console.log(newOrders);
     } catch (e) {
       console.log(e);
     }
@@ -59,21 +62,26 @@ const [car, setCar] = useState(null);
   }
 
   const onAccept = async (newOrder) => {
-    try {
-      const input = {
-        id: newOrder.id,
-        status: "PICKING_UP_CLIENT",
-        carId: car.id
-      }
-      const orderData = await API.graphql(
-        graphqlOperation(updateOrder, { input })
-      )
-      setOrder(orderData.data.updateOrder);
-    } catch (e) {
+    // try {
+    //   const input = {
+    //     id: newOrder.id,
+    //     status: "PICKING_UP_CLIENT",
+    //     carId: car.id
+    //   }
+    //   const orderData = await API.graphql(
+    //     graphqlOperation(updateOrder, { input })
+    //   )
+    //   setOrder(orderData.data.updateOrder);
+    // } catch (e) {
 
-    }
-
+    // }
+    setOrder(newOrder);
     setNewOrders(newOrders.slice(1));
+
+    console.log("accept new order")
+    console.log(newOrder)
+    console.log("accept order");
+    console.log(order);    
   }
 
   const onGoPress = async () => {
@@ -87,6 +95,7 @@ const [car, setCar] = useState(null);
       const updatedCarData = await API.graphql(
         graphqlOperation(updateCar, { input })
       )
+      //console.log(updatedCarData);
       setCar(updatedCarData.data.updateCar);
     } catch (e) {
       console.error(e);
@@ -153,7 +162,7 @@ const [car, setCar] = useState(null);
               <View style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'center', backgroundColor: '#9cbe55', width: 200, padding: 10, borderRadius: 5}}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>COMPLETE {order.type}</Text>
               </View>
-              <Text style={styles.bottomText}>{order.user.username}</Text>
+              <Text style={styles.bottomText}>{order.user?.username}</Text>
             </View>
           )
         }
@@ -168,7 +177,7 @@ const [car, setCar] = useState(null);
                 </View>
                 <Text>{order.distance ? order.distance.toFixed(1) : '?'} km</Text>
               </View>
-              <Text style={styles.bottomText}>Dropping off {order.user.username}</Text>
+              <Text style={styles.bottomText}>Dropping off {order.user?.username}</Text>
             </View>
           )
         }
@@ -183,7 +192,7 @@ const [car, setCar] = useState(null);
                 </View>
                 <Text>{order.distance ? order.distance.toFixed(1) : '?'} km</Text>
               </View>
-              <Text style={styles.bottomText}>Picking up {order.user.username}</Text>
+              <Text style={styles.bottomText}>Picking up {order.user?.username}</Text>
             </View>
           )
         }
@@ -211,7 +220,10 @@ const [car, setCar] = useState(null);
         >
             {order && (
             <MapViewDirections
-            origin={myPosition} //origin
+            origin={{
+              latitude: car?.latitude, 
+              longitude: car?.longitude
+            }} //origin
             onReady={onDirectionFound}
             destination={getDestination()}
             apikey={GOOGLE_MAPS_APIKEY}
@@ -219,13 +231,6 @@ const [car, setCar] = useState(null);
             strokeColor="#9cbe85"
             />
             )}
-
-            {order && <Marker
-            coordinate={getOrigin()}
-            title={"Origin"}
-            pinColor={"tan"}
-            />
-            }
             
             {order && <Marker
             coordinate={getDestination()}
