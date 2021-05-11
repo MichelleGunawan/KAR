@@ -14,13 +14,18 @@ GOOGLE_MAPS_APIKEY = 'AIzaSyBkqeiDhW2DiRb_tZfrueJnyJFc2LecSgY';
 
 import {Auth, API, graphqlOperation} from 'aws-amplify';
 import {getCar, listOrders} from '../../graphql/queries';
-import {updateCar} from '../../graphql/mutations';
+import {updateCar, updateOrder} from '../../graphql/mutations';
 
 const HomeScreen = (props) => {
   const [car, setCar] = useState(null);
   const [myPosition, setMyPosition] = useState(null);
   const [order, setOrder] = useState(null)
   const [newOrders, setNewOrders] = useState([]);
+
+  const[initialRegion, setInitialRegion] =useState(null);
+
+  
+
 
   const fetchCar = async () => {
     try {
@@ -53,6 +58,27 @@ const HomeScreen = (props) => {
   }
 
   useEffect(() => {
+    const getCurrentLocation= async (event) => {
+      navigator.geolocation.getCurrentPosition(
+          position => {
+          let region = {
+                  latitude: parseFloat(position.coords.latitude),
+                  longitude: parseFloat(position.coords.longitude),
+                  latitudeDelta: .12,
+                  longitudeDelta: .10
+              };
+              setInitialRegion(region);
+          },
+          error => console.log(error),
+          {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 1000
+          }
+      );
+  }
+          
+  getCurrentLocation();
     fetchCar();
     fetchOrders();
   }, []);
@@ -62,20 +88,19 @@ const HomeScreen = (props) => {
   }
 
   const onAccept = async (newOrder) => {
-    // try {
-    //   const input = {
-    //     id: newOrder.id,
-    //     status: "PICKING_UP_CLIENT",
-    //     carId: car.id
-    //   }
-    //   const orderData = await API.graphql(
-    //     graphqlOperation(updateOrder, { input })
-    //   )
-    //   setOrder(orderData.data.updateOrder);
-    // } catch (e) {
+    try {
+      const input = {
+        id: newOrder.id,
+        status: "PICKING_UP_CLIENT",
+        carId: car.id
+      }
+      const orderData = await API.graphql(
+        graphqlOperation(updateOrder, { input })
+      )
+      setOrder(orderData.data.updateOrder);
+    } catch (e) {
 
-    // }
-    setOrder(newOrder);
+    }
     setNewOrders(newOrders.slice(1));
 
     console.log("accept new order")
@@ -100,6 +125,10 @@ const HomeScreen = (props) => {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  const onCompletePress = async () => {
+    setOrder(null);
   }
 
   const onUserLocationChange = async (event) => {
@@ -157,15 +186,17 @@ const HomeScreen = (props) => {
 
     const renderBottomTitle = () => {
         if (order && order.isFinished) {
+          
           return (
             <View style={{ alignItems: 'center' }}>
-              <View style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'center', backgroundColor: '#9cbe55', width: 200, padding: 10, borderRadius: 5}}>
-                <Text style={{color: 'white', fontWeight: 'bold'}}>COMPLETE {order.type}</Text>
-              </View>
-              <Text style={styles.bottomText}>{order.user?.username}</Text>
+              <Pressable onPress={onCompletePress} style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'center', backgroundColor: '#9cbe55', width: 200, padding: 10, borderRadius: 5}}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>COMPLETE ORDER</Text>
+              </Pressable>
+              <Text style={styles.bottomText}>{order?.username}</Text>
             </View>
           )
         }
+        // {order.type}
     
         if (order && order.pickedUp) {
           return (
@@ -177,7 +208,7 @@ const HomeScreen = (props) => {
                 </View>
                 <Text>{order.distance ? order.distance.toFixed(1) : '?'} km</Text>
               </View>
-              <Text style={styles.bottomText}>Dropping off {order.user?.username}</Text>
+              <Text style={styles.bottomText}>Dropping off {order?.username}</Text>
             </View>
           )
         }
@@ -192,7 +223,7 @@ const HomeScreen = (props) => {
                 </View>
                 <Text>{order.distance ? order.distance.toFixed(1) : '?'} km</Text>
               </View>
-              <Text style={styles.bottomText}>Picking up {order.user?.username}</Text>
+              <Text style={styles.bottomText}>Picking up {order?.username}</Text>
             </View>
           )
         }
@@ -211,12 +242,7 @@ const HomeScreen = (props) => {
             provider={PROVIDER_GOOGLE}
             showsUserLocation={true}
             onUserLocationChange={onUserLocationChange}
-            initialRegion={{
-            latitude: 28.450627,
-            longitude: -16.263045,
-            latitudeDelta: 0.0222,
-            longitudeDelta: 0.0121,
-            }}
+            initialRegion={initialRegion}
         >
             {order && (
             <MapViewDirections

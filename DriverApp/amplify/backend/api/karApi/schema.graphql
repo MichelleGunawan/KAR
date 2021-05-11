@@ -38,6 +38,11 @@ type Order @model
   destLatitude: Float!
   destLongitude: Float!
 
+  distance: Float!
+  price: Float!
+
+  username: String,
+
   userId: ID!
   user: User @connection(fields: ["userId"])
 
